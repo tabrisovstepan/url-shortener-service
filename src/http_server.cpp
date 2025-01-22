@@ -1,4 +1,5 @@
 #include "http_server.hpp"
+#include "utils.hpp"
 
 namespace hs 
 {
@@ -11,7 +12,7 @@ HttpServer::HttpServer(const char* ip, uint32_t port)
 
 void HttpServer::run()
 {
-    assert(mControllers.empty() && "There`re no controllers for handle requests");
+    assert(mControllers.empty() != true && "There`re no controllers for handle requests");
 
     for (;;)
     {
@@ -55,7 +56,7 @@ void HttpServer::doServiceRequests(http::request<http::string_body>& req,
             return;
         }
     }
-    std::cout << "Wrong request. Route not found. Send 404" << std::endl;
+    resp = utils::bad_request(req, req.target());
 }
 
 }

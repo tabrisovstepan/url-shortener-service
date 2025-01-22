@@ -5,13 +5,53 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 
+#include <boost/beast.hpp>
+#include <boost/json.hpp>
+
+namespace beast   = boost::beast;
+namespace http    = beast::http;
+namespace json    = boost::json;
+
 namespace hs 
 {
 
 namespace utils 
 {
 
-bool route_match(std::string_view pattern, std::string_view target) 
+inline http::response<http::string_body> not_found(const http::request<http::string_body>& req, std::string_view target)
+{
+    http::response<http::string_body> resp {http::status::not_found, req.version()};
+    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+    resp.set(http::field::content_type, "application/json");
+    resp.keep_alive(req.keep_alive());
+    resp.body() = "{\"message\":\"The resource " + std::string(target) + " was not found.\"}";
+    resp.prepare_payload();
+    return resp;
+}
+
+inline http::response<http::string_body> bad_request(const http::request<http::string_body>& req, std::string_view cause)
+{
+    http::response<http::string_body> resp {http::status::bad_request, req.version()};
+    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+    resp.set(http::field::content_type, "application/json");
+    resp.keep_alive(req.keep_alive());
+    resp.body() = "{\"message\":\"" + std::string(cause) + "\"}";
+    resp.prepare_payload();
+    return resp;
+}
+
+inline http::response<http::string_body> server_error(const http::request<http::string_body>& req, std::string_view cause)
+{
+    http::response<http::string_body> resp {http::status::internal_server_error, req.version()};
+    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+    resp.set(http::field::content_type, "application/json");
+    resp.keep_alive(req.keep_alive());
+    resp.body() = "{\"message\":\"An error occurred: " + std::string(cause) + "\"}";
+    resp.prepare_payload();
+    return resp;
+}
+
+inline bool route_match(std::string_view pattern, std::string_view target)
 {
     std::vector<std::string> pattern_segments;
     std::vector<std::string> target_segments;

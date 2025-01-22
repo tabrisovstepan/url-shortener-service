@@ -16,4 +16,3 @@ add_executable(url_shortener_service src/main.cpp
         src/utils.hpp)
 
 target_link_libraries(url_shortener_service Boost::program_options)
-

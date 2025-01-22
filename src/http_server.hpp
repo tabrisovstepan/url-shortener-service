@@ -22,7 +22,7 @@ class HttpServer
 public:
     explicit HttpServer(const char* ip, uint32_t port);
 
-    void run();
+    [[noreturn]] void run();
 
     template <typename ...Args>
     void addController(Args&&... args)

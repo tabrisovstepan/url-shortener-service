@@ -1,5 +1,5 @@
 #include "abstract_controller.hpp"
-#include <boost/json.hpp>
+#include "utils.hpp"
 
 namespace ctrl 
 {
@@ -7,58 +7,31 @@ namespace ctrl
 void AbstractController::onGetMethodRequest(http::request<http::string_body>& req,
                                             http::response<http::string_body>& resp)
 {
-    //not found
-    resp.result(http::status::not_found);
-    resp.version(req.version());
-    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    resp.set(http::field::content_type, "application/json");
-    resp.keep_alive(req.keep_alive());
-    resp.body() = "{\"message\": \"not found\"}"; // boost::format
-    resp.prepare_payload();
+    resp = hs::utils::not_found(req, req.target());
 }
 
 void AbstractController::onPostMethodRequest(http::request<http::string_body>& req,
                                              http::response<http::string_body>& resp)
 {
-    resp.result(http::status::not_found);
-    resp.version(req.version());
-    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    resp.set(http::field::content_type, "application/json");
-    resp.keep_alive(req.keep_alive());
-    resp.body() = "{\"message\": \"not found\"}"; // boost::format
-    resp.prepare_payload();
+    resp = hs::utils::not_found(req, req.target());
 }                                            
 
 void AbstractController::onPutMethodRequest(http::request<http::string_body>& req,
                                             http::response<http::string_body>& resp)
 {
-    resp.result(http::status::not_found);
-    resp.version(req.version());
-    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    resp.set(http::field::content_type, "application/json");
-    resp.keep_alive(req.keep_alive());
-    resp.body() = "{\"message\": \"not found\"}"; // boost::format
-    resp.prepare_payload();
+    resp = hs::utils::not_found(req, req.target());
 }
 
 void AbstractController::onDeleteMethodRequest(http::request<http::string_body>& req,
                                                http::response<http::string_body>& resp)
 {
-    resp.result(http::status::not_found);
-    resp.version(req.version());
-    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    resp.set(http::field::content_type, "application/json");
-    resp.keep_alive(req.keep_alive());
-    resp.body() = "{\"message\": \"not found\"}"; // boost::format
-    resp.prepare_payload();
+    resp = hs::utils::not_found(req, req.target());
 }
 
 void AbstractController::doService(http::request<http::string_body>& req,
                                    http::response<http::string_body>& resp)
 {
-
     //validate target
-
     switch (req.method())
     {
     case http::verb::get: 
@@ -74,13 +47,7 @@ void AbstractController::doService(http::request<http::string_body>& req,
         onDeleteMethodRequest(req, resp);
         break;
     default: 
-        resp.result(http::status::bad_request);
-        resp.version(req.version());
-        resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-        resp.set(http::field::content_type, "application/json");
-        resp.keep_alive(req.keep_alive());
-        resp.body() = "{\"message\": \"illegal request-target\"}"; // boost::format
-        resp.prepare_payload();
+        resp = hs::utils::bad_request(req, req.target());
         break;
     }    
 }     
