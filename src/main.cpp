@@ -1,5 +1,6 @@
 #include "http_server.hpp"
 #include "url_shortener_controller.hpp"
+#include "url_shortener_service.hpp"
 
 #include <iostream>
 #include <memory>
@@ -27,11 +28,16 @@ int main(int argc, char** argv)
             return 1;
         }
 
+        auto service    = std::make_unique<UrlShortenerService>("url_storage.db");
+        auto controller = std::make_unique<UrlShortenerController>(std::move(service));
+
         hs::HttpServer server("127.0.0.1", 8989);
-        server.addController(std::make_unique<UrlShortenerController>());
+        server.addController(std::move(controller));
         server.run();
 
-    } catch (std::exception& ex) {
+    }
+    catch (std::exception& ex)
+    {
         std::cerr << ex.what() << std::endl;
     }
     return 0;

@@ -51,6 +51,17 @@ inline http::response<http::string_body> server_error(const http::request<http::
     return resp;
 }
 
+    inline http::response<http::string_body> conflict(const http::request<http::string_body>& req, std::string_view cause)
+    {
+        http::response<http::string_body> resp {http::status::conflict, req.version()};
+        resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+        resp.set(http::field::content_type, "application/json");
+        resp.keep_alive(req.keep_alive());
+        resp.body() = "{\"message\":\"Conflict: " + std::string(cause) + "\"}";
+        resp.prepare_payload();
+        return resp;
+    }
+
 inline bool route_match(std::string_view pattern, std::string_view target)
 {
     std::vector<std::string> pattern_segments;
