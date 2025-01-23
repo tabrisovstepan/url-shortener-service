@@ -1,6 +1,6 @@
-#include "http_server.hpp"
-#include "url_shortener_controller.hpp"
-#include "url_shortener_service.hpp"
+#include "lib/http_server.hpp"
+#include "controller/url_shortener_controller.hpp"
+#include "service/url_shortener_service.hpp"
 
 #include <iostream>
 #include <memory>

@@ -1,7 +1,6 @@
 #include "abstract_controller.hpp"
-#include "utils.hpp"
 
-namespace ctrl 
+namespace hs::cr
 {
 
 void AbstractController::onGetMethodRequest(http::request<http::string_body>& req,
@@ -31,7 +30,6 @@ void AbstractController::onDeleteMethodRequest(http::request<http::string_body>&
 void AbstractController::doService(http::request<http::string_body>& req,
                                    http::response<http::string_body>& resp)
 {
-    //validate target
     switch (req.method())
     {
     case http::verb::get: 

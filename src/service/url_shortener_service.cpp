@@ -44,8 +44,6 @@ UrlEntity UrlShortenerService::createShortUrl(const std::string& url,
                                               const std::string& short_url,
                                               const std::string& host)
 {
-    std::string prefix {"http://" + host + "/url/"};
-
     SQLite::Statement q1 (db, insert_data);
     q1.bind(1, url);
     q1.bind(2, short_url);
@@ -59,8 +57,8 @@ UrlEntity UrlShortenerService::createShortUrl(const std::string& url,
     if (!q2.executeStep()) return {};
 
     return { .id = q2.getColumn(0).getInt(),
-            .base_url = q2.getColumn(1).getString(),
-            .short_url =  q2.getColumn(2).getString() };
+             .base_url = q2.getColumn(1).getString(),
+             .short_url =  q2.getColumn(2).getString() };
 }
 
 std::optional<std::string> UrlShortenerService::getBaseUrl(const std::string &short_url)

@@ -1,5 +1,5 @@
-#ifndef UTILS_INCLUDE_H
-#define UTILS_INCLUDE_H
+#ifndef UTILS_INCLUDE_HPP
+#define UTILS_INCLUDE_HPP
 
 #include <string>
 #include <iostream>
@@ -12,15 +12,15 @@ namespace beast   = boost::beast;
 namespace http    = beast::http;
 namespace json    = boost::json;
 
-namespace hs 
+using request     = http::request<http::string_body>;
+using response    = http::response<http::string_body>;
+
+namespace hs::utils
 {
 
-namespace utils 
+inline response not_found(const request& req, std::string_view target)
 {
-
-inline http::response<http::string_body> not_found(const http::request<http::string_body>& req, std::string_view target)
-{
-    http::response<http::string_body> resp {http::status::not_found, req.version()};
+    response resp {http::status::not_found, req.version()};
     resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
     resp.set(http::field::content_type, "application/json");
     resp.keep_alive(req.keep_alive());
@@ -29,9 +29,9 @@ inline http::response<http::string_body> not_found(const http::request<http::str
     return resp;
 }
 
-inline http::response<http::string_body> bad_request(const http::request<http::string_body>& req, std::string_view cause)
+inline response bad_request(const request& req, std::string_view cause)
 {
-    http::response<http::string_body> resp {http::status::bad_request, req.version()};
+    response resp {http::status::bad_request, req.version()};
     resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
     resp.set(http::field::content_type, "application/json");
     resp.keep_alive(req.keep_alive());
@@ -40,9 +40,9 @@ inline http::response<http::string_body> bad_request(const http::request<http::s
     return resp;
 }
 
-inline http::response<http::string_body> server_error(const http::request<http::string_body>& req, std::string_view cause)
+inline response server_error(const request& req, std::string_view cause)
 {
-    http::response<http::string_body> resp {http::status::internal_server_error, req.version()};
+    response resp {http::status::internal_server_error, req.version()};
     resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
     resp.set(http::field::content_type, "application/json");
     resp.keep_alive(req.keep_alive());
@@ -51,16 +51,16 @@ inline http::response<http::string_body> server_error(const http::request<http::
     return resp;
 }
 
-    inline http::response<http::string_body> conflict(const http::request<http::string_body>& req, std::string_view cause)
-    {
-        http::response<http::string_body> resp {http::status::conflict, req.version()};
-        resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-        resp.set(http::field::content_type, "application/json");
-        resp.keep_alive(req.keep_alive());
-        resp.body() = "{\"message\":\"Conflict: " + std::string(cause) + "\"}";
-        resp.prepare_payload();
-        return resp;
-    }
+inline response conflict(const request& req, std::string_view cause)
+{
+    response resp {http::status::conflict, req.version()};
+    resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+    resp.set(http::field::content_type, "application/json");
+    resp.keep_alive(req.keep_alive());
+    resp.body() = "{\"message\":\"Conflict: " + std::string(cause) + "\"}";
+    resp.prepare_payload();
+    return resp;
+}
 
 inline bool route_match(std::string_view pattern, std::string_view target)
 {
@@ -85,8 +85,6 @@ inline bool route_match(std::string_view pattern, std::string_view target)
     }
     return true;
 }
-
-} // namespace utils
 
 } // namespace hs
 

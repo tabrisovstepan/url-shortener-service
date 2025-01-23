@@ -1,5 +1,5 @@
 #include "url_shortener_controller.hpp"
-#include "utils.hpp"
+#include "../lib/utils.hpp"
 
 #include <boost/json.hpp>
 
@@ -9,7 +9,7 @@ UrlShortenerController::UrlShortenerController(ScopedPtr&& service)
 
 }
 
-std::string UrlShortenerController::path() const
+const char* UrlShortenerController::path() const
 {
     return "/";
 }

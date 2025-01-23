@@ -10,13 +10,6 @@ struct UrlEntity
     int32_t id {};
     std::string base_url;
     std::string short_url;
-
-    explicit operator std::string () const
-    {
-        return "{ \"id\":\"" + std::to_string(id) + "\""
-               "  \"base_url\":\"" + base_url + "\": "
-               "  \"short_url\":\"" + short_url + "\": }";
-    }
 };
 
 class UrlShortenerService final

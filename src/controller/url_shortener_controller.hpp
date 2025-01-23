@@ -1,17 +1,17 @@
-#ifndef URL_SHORTENER_CONTROLLER_H
-#define URL_SHORTENER_CONTROLLER_H
+#ifndef URL_SHORTENER_CONTROLLER_HPP
+#define URL_SHORTENER_CONTROLLER_HPP
 
-#include "abstract_controller.hpp"
-#include "url_shortener_service.hpp"
+#include "../lib/abstract_controller.hpp"
+#include "../service/url_shortener_service.hpp"
 
 class UrlShortenerController
-    : public ctrl::AbstractController
+    : public hs::cr::AbstractController
 {
     using ScopedPtr = std::unique_ptr<UrlShortenerService>;
 public:
     explicit UrlShortenerController(ScopedPtr&& service);
 
-    std::string path() const override;
+    [[nodiscard]] const char* path() const override;
 
     void onGetMethodRequest(http::request<http::string_body>& req,
                             http::response<http::string_body>& resp) override;
