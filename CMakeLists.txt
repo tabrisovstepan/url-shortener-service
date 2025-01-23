@@ -6,6 +6,8 @@ set(Boost_USE_STATIC_LIBS OFF)
 
 find_package(Boost 1.81 COMPONENTS program_options)
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/SQLiteCpp)
+
 add_executable(url_shortener_service src/main.cpp
         src/http_server.hpp
         src/http_server.cpp
@@ -15,4 +17,4 @@ add_executable(url_shortener_service src/main.cpp
         src/url_shortener_controller.cpp
         src/utils.hpp)
 
-target_link_libraries(url_shortener_service Boost::program_options)
+target_link_libraries(url_shortener_service Boost::program_options SQLiteCpp)
