@@ -19,7 +19,7 @@ UrlShortenerService::UrlShortenerService(const std::string &path)
 UrlEntity UrlShortenerService::createShortUrl(const std::string& url,
                                               const std::string& host)
 {
-    std::string prefix {"http://" + host + "/url/"};
+    std::string prefix {"http://" + host + "/"};
 
     auto short_url = prefix + makeShortUrl(url);
 

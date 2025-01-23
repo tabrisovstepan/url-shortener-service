@@ -11,7 +11,7 @@ UrlShortenerController::UrlShortenerController(ScopedPtr&& service)
 
 std::string UrlShortenerController::path() const
 {
-    return "/url";
+    return "/";
 }
 
 void UrlShortenerController::onGetMethodRequest(http::request<http::string_body>& req,
@@ -86,6 +86,42 @@ void UrlShortenerController::onPostMethodRequest(http::request<http::string_body
 
     if (hs::utils::route_match("/url/custom", req.target()))
     {
+        try
+        {
+            auto object = boost::json::parse(req.body());
+            auto target_url = object.at("target_url").as_string();
+            auto short_url  = object.at("short_url").as_string();
+            auto entity = mService->createShortUrl(target_url.c_str(),
+                                                   short_url.c_str(),
+                                                   req.at(http::field::host));
+
+            boost::json::object result { {"id", entity.id},
+                                         {"base_url", entity.base_url},
+                                         {"short_url",entity.short_url} };
+
+            resp.result(http::status::created);
+            resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+            resp.set(http::field::content_type, "application/json");
+            resp.body() = boost::json::serialize(result);
+            resp.keep_alive(req.keep_alive());
+            resp.prepare_payload();
+        }
+        catch (std::exception& ex)
+        {
+            std::cerr << "Exception : " << ex.what() << std::endl;
+            if (std::string(ex.what()).find("out of range") != std::string::npos)
+            {
+                resp = hs::utils::bad_request(req, "missing field");
+            }
+            else if (std::string(ex.what()).find("UNIQUE") != std::string::npos)
+            {
+                resp = hs::utils::conflict(req, "short url already exists");
+            }
+            else
+            {
+                resp = hs::utils::server_error(req, ex.what());
+            }
+        }
         return;
     }
 }
