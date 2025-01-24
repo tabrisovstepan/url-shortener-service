@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "049506d4-88ac-431a-86ae-9518cde43519",
+		"_postman_id": "bead7c4c-cb1f-44aa-9aa0-5d9f8751570e",
 		"name": "url-shortener-api-collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -57,7 +57,27 @@
 			"name": "Create short url custom",
 			"request": {
 				"method": "POST",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"target_url\": \"https://github.com/tabrisovstepan/url-shortener-service\",\n    \"short_url\": \"http://localhost:8989/tast-task\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8989/url",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8989",
+					"path": [
+						"url"
+					]
+				}
 			},
 			"response": []
 		}
