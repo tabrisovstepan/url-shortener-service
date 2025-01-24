@@ -12,3 +12,7 @@ add_library(HttpServer SHARED ${SOURCES})
 
 target_link_libraries(HttpServer Boost::json)
 target_include_directories(HttpServer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+install(TARGETS HttpServer 
+        LIBRARY DESTINATION /usr/local/lib
+        PUBLIC_HEADER DESTINATION /usr/local/include) 
