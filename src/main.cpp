@@ -19,6 +19,10 @@ int main(int argc, char** argv)
 
     options::variables_map values{};
 
+    std::string ip {"127.0.0.1"};
+    int port {8989};
+    std::string db_path {"url_storage.db"};
+
     try {
         options::store(options::parse_command_line(argc, argv, description), values);
         options::notify(values);
@@ -29,10 +33,15 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        auto service    = std::make_unique<UrlShortenerService>("url_storage.db");
+        auto service    = std::make_unique<UrlShortenerService>(db_path);
         auto controller = std::make_unique<UrlShortenerController>(std::move(service));
 
-        hs::HttpServer server("127.0.0.1", 8989);
+        std::cout << "Start url-shortener-service\n";
+        std::cout << "Host : " << ip << '\n';
+        std::cout << "Port : " << port << '\n';
+        std::cout << "DB   : " << db_path << "\n\n";
+
+        hs::HttpServer server(ip.c_str(), port);
         server.addController(std::move(controller));
         server.run();
 

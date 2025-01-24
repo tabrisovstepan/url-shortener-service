@@ -17,6 +17,10 @@ const char* UrlShortenerController::path() const
 void UrlShortenerController::onGetMethodRequest(http::request<http::string_body>& req,
                                                 http::response<http::string_body>& resp)
 {
+    std::cout << "Handling request\n";
+    std::cout << "Method : " << req.method() << '\n';
+    std::cout << "Target : " << req.target() << "\n\n";
+
     try
     {
         auto short_url = std::string{"http://"} + std::string{req.at(http::field::host)} + std::string{req.target()};
@@ -38,7 +42,7 @@ void UrlShortenerController::onGetMethodRequest(http::request<http::string_body>
     }
     catch (std::exception& ex)
     {
-        std::cerr << "Exception : " << ex.what() << std::endl;
+        std::cerr << "ERROR : " << ex.what() << std::endl;
         resp = hs::utils::server_error(req, ex.what());
     }
 }
@@ -46,6 +50,10 @@ void UrlShortenerController::onGetMethodRequest(http::request<http::string_body>
 void UrlShortenerController::onPostMethodRequest(http::request<http::string_body>& req,
                                                  http::response<http::string_body>& resp)
 {
+    std::cout << "Handling request\n";
+    std::cout << "Method : " << req.method() << '\n';
+    std::cout << "Target : " << req.target() << "\n\n";
+    
     if (hs::utils::route_match("/url", req.target()))
     {
         try
@@ -67,7 +75,7 @@ void UrlShortenerController::onPostMethodRequest(http::request<http::string_body
         }
         catch (std::exception& ex)
         {
-            std::cerr << "Exception : " << ex.what() << std::endl;
+            std::cerr << "ERROR : " << ex.what() << std::endl;
             if (std::string(ex.what()).find("out of range") != std::string::npos)
             {
                 resp = hs::utils::bad_request(req, "missing field");
@@ -108,7 +116,7 @@ void UrlShortenerController::onPostMethodRequest(http::request<http::string_body
         }
         catch (std::exception& ex)
         {
-            std::cerr << "Exception : " << ex.what() << std::endl;
+            std::cerr << "ERROR : " << ex.what() << std::endl;
             if (std::string(ex.what()).find("out of range") != std::string::npos)
             {
                 resp = hs::utils::bad_request(req, "missing field");
