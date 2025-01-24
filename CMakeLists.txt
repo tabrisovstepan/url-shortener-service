@@ -31,3 +31,9 @@ target_link_libraries(url_shortener_service Boost::program_options Boost::json S
 
 install(TARGETS url_shortener_service 
         RUNTIME DESTINATION /usr/local/bin)
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/resource/db/url_storage.db 
+        DESTINATION /var/url-shortener-service
+        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_WRITE GROUP_READ WORLD_READ WORLD_WRITE)
+
+install(CODE "execute_process(COMMAND sudo chown $ENV{USER}:$ENV{USER} /var/url-shortener-service/url_storage.db)")

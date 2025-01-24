@@ -14,14 +14,15 @@ int main(int argc, char** argv)
     options::options_description description{"Allowed options"};
     description.add_options()
             ("help", "produce help message")
-            ("host", "setup host address")              // use default ip address [options::value<std::string>(ip)->default_value("127.0.0.1")]
-            ("port", "setup port");     // use default port [options::value<uint32_t>(port)->default_value(8080)]
-
+            ("host", options::value<std::string>(), "setup host address (default 127.0.0.1)")
+            ("port", options::value<int>(),         "setup port (default 8989)")
+            ("db",   options::value<std::string>(), "setup database full path (default /etc/url-shortener-service/url_storage.db)");
+    
     options::variables_map values{};
 
     std::string ip {"127.0.0.1"};
     int port {8989};
-    std::string db_path {"url_storage.db"};
+    std::string db_path {"/var/url-shortener-service/url_storage.db"};
 
     try {
         options::store(options::parse_command_line(argc, argv, description), values);
@@ -31,6 +32,21 @@ int main(int argc, char** argv)
         {
             std::cout << description << std::endl;
             return 1;
+        }
+
+        if (values.count("host"))
+        {
+            ip = values["host"].as<std::string>();
+        }
+
+        if (values.count("port"))
+        {
+            port = values["port"].as<int>();
+        }
+
+        if (values.count("db"))
+        {
+            db_path = values["db"].as<std::string>(); 
         }
 
         auto service    = std::make_unique<UrlShortenerService>(db_path);
@@ -48,7 +64,7 @@ int main(int argc, char** argv)
     }
     catch (std::exception& ex)
     {
-        std::cerr << ex.what() << std::endl;
+        std::cerr << "ERROR : " << ex.what() << std::endl;
     }
     return 0;
 }
