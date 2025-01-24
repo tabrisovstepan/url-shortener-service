@@ -1,7 +1,7 @@
 #ifndef URL_SHORTENER_CONTROLLER_HPP
 #define URL_SHORTENER_CONTROLLER_HPP
 
-#include "../lib/abstract_controller.hpp"
+#include <abstract_controller.hpp>
 #include "../service/url_shortener_service.hpp"
 
 class UrlShortenerController

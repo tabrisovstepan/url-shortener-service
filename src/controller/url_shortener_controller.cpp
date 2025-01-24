@@ -1,5 +1,5 @@
 #include "url_shortener_controller.hpp"
-#include "../lib/utils.hpp"
+#include <utils.hpp>
 
 #include <boost/json.hpp>
 
